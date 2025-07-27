@@ -23,7 +23,6 @@ echo "==============================================="
 # Light load test
 echo "Light load (200 connections, 20 seconds):"
 wrk -t12 -c200 -d20s --timeout 10s "http://localhost:8080/api/blocking/rate"
-# TODO: Should compare to Coroutines
 
 #
 #echo ""
