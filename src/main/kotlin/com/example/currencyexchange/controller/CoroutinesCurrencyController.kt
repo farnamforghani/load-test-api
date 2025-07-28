@@ -14,7 +14,7 @@ class CoroutinesCurrencyController(
     private val mockService: MockCurrencyService
 ) {
 
-    @GetMapping("/rate")
+    @GetMapping
     suspend fun getCurrencyRate(): ApiResponse<String?> = withContext(Dispatchers.IO) {
         MonitoringController.incrementCoroutine()
         val stopWatch = StopWatch()

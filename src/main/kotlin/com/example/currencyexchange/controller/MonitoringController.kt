@@ -11,11 +11,13 @@ import java.util.concurrent.atomic.AtomicInteger
 class MonitoringController {
 
     companion object {
-        private val blockingRequests = AtomicInteger(0)
+        private val blockingRestRequests = AtomicInteger(0)
+        private val blockingWebClientRequests = AtomicInteger(0)
         private val coroutineRequests = AtomicInteger(0)
         private val webfluxRequests = AtomicInteger(0)
 
-        fun incrementBlocking() = blockingRequests.incrementAndGet()
+        fun incrementRestBlocking() = blockingRestRequests.incrementAndGet()
+        fun incrementWebClientBlocking() = blockingWebClientRequests.incrementAndGet()
         fun incrementCoroutine() = coroutineRequests.incrementAndGet()
         fun incrementWebflux() = webfluxRequests.incrementAndGet()
     }
@@ -29,7 +31,8 @@ class MonitoringController {
         return mapOf(
             "timestamp" to System.currentTimeMillis(),
             "requests" to mapOf(
-                "blocking" to blockingRequests.get(),
+                "blockingRest" to blockingRestRequests.get(),
+                "blockingWebClient" to blockingWebClientRequests.get(),
                 "coroutines" to coroutineRequests.get(),
                 "webflux" to webfluxRequests.get()
             ),
@@ -54,7 +57,8 @@ class MonitoringController {
 
     @GetMapping("/reset")
     fun resetCounters(): Map<String, String> {
-        blockingRequests.set(0)
+        blockingRestRequests.set(0)
+        blockingWebClientRequests.set(0)
         coroutineRequests.set(0)
         webfluxRequests.set(0)
         return mapOf("status" to "Counters reset")

@@ -13,18 +13,15 @@ class BlockingCurrencyController(
     private val mockService: MockCurrencyService
 ) {
 
-    @GetMapping("/rate")
-    fun getCurrencyRate(
-//        @RequestParam base: String,
-//        @RequestParam target: String
-    ): ApiResponse<String?> {
-        MonitoringController.incrementBlocking()
+    @GetMapping("/rest")
+    fun getCurrencyRateRest(): ApiResponse<String?> {
+        MonitoringController.incrementRestBlocking()
         val stopWatch = StopWatch()
         stopWatch.start()
 
         try {
             // Simulate external API call
-            val rate = mockService.simulateExternalApiCallBlocking()
+            val rate = mockService.simulateExternalApiCallBlockingRest()
 
             stopWatch.stop()
             return ApiResponse(
@@ -38,8 +35,25 @@ class BlockingCurrencyController(
         }
     }
 
-    @GetMapping("/local")
-    fun localApiCall(): String {
-        return "Hello world"
+    @GetMapping("/webclient")
+    fun getCurrencyRateWebClient(): ApiResponse<String?> {
+        MonitoringController.incrementWebClientBlocking()
+        val stopWatch = StopWatch()
+        stopWatch.start()
+
+        try {
+            // Simulate external API call
+            val rate = mockService.simulateExternalApiCallBlockingWebClient()
+
+            stopWatch.stop()
+            return ApiResponse(
+                data = rate,
+                responseTime = stopWatch.totalTimeMillis,
+                threadName = Thread.currentThread().name
+            )
+        } catch (e: Exception) {
+            stopWatch.stop()
+            throw RuntimeException("Failed to get currency rate", e)
+        }
     }
 }

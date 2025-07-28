@@ -12,22 +12,23 @@ import reactor.core.publisher.Mono
 @Service
 class MockCurrencyService {
 
-    fun simulateExternalApiCallBlocking(): String {
-//        REST-TEMPLATE
-//        val restTemplate = RestTemplate()
-//        val headers = HttpHeaders()
-//        val entity = HttpEntity<String>(headers)
-//
-//        val response = restTemplate.exchange(
-//            "http://localhost:8081/local",
-//            HttpMethod.GET,
-//            entity,
-//            String::class.java
-//        )
-//
-//        return response.body.toString()
+    fun simulateExternalApiCallBlockingRest(): String {
+        val restTemplate = RestTemplate()
+        val headers = HttpHeaders()
+        val entity = HttpEntity<String>(headers)
 
-//        WEB-CLIENT
+        val response = restTemplate.exchange(
+            "http://localhost:8081/local",
+            HttpMethod.GET,
+            entity,
+            String::class.java
+        )
+
+        return response.body.toString()
+    }
+
+
+    fun simulateExternalApiCallBlockingWebClient(): String {
         val webClient = WebClient.create()
 
         val response = webClient
@@ -35,10 +36,11 @@ class MockCurrencyService {
             .uri("http://localhost:8081/local")
             .retrieve()
             .bodyToMono(String::class.java)
-            .block() // This makes it blocking
+            .block()
 
         return response ?: throw RuntimeException("No response received")
     }
+
 
     suspend fun simulateExternalApiCallCoroutines(): String {
         val webClient = WebClient.create()
@@ -65,7 +67,6 @@ class MockCurrencyService {
 @GetMapping("/local")
     fun localApiCall(): ResponseEntity<String> {
         Thread.sleep(500)
-        // + Random.nextInt(200).toLong()
         return ResponseEntity.ok("Hello World")
     }
 */
