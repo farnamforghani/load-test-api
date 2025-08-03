@@ -11,6 +11,9 @@ import reactor.core.publisher.Mono
 
 @Service
 class MockCurrencyService {
+    private val webClient = WebClient.builder()
+        .baseUrl("http://localhost:8081")
+        .build()
 
     fun simulateExternalApiCallBlockingRest(): String {
         val restTemplate = RestTemplate()
@@ -29,8 +32,6 @@ class MockCurrencyService {
 
 
     fun simulateExternalApiCallBlockingWebClient(): String {
-        val webClient = WebClient.create()
-
         val response = webClient
             .get()
             .uri("http://localhost:8081/local")
@@ -43,7 +44,6 @@ class MockCurrencyService {
 
 
     suspend fun simulateExternalApiCallCoroutines(): String {
-        val webClient = WebClient.create()
         return webClient
             .get()
             .uri("http://localhost:8081/local")
@@ -52,8 +52,6 @@ class MockCurrencyService {
     }
 
     fun simulateExternalApiCallReactive(): Mono<String?> {
-        val webClient = WebClient.create()
-
         return webClient
             .get()
             .uri("http://localhost:8081/local")
@@ -64,9 +62,14 @@ class MockCurrencyService {
 }
 
 /*
-@GetMapping("/local")
+    @GetMapping("/local")
     fun localApiCall(): ResponseEntity<String> {
-        Thread.sleep(500)
-        return ResponseEntity.ok("Hello World")
+//        Thread.sleep(500)
+//        return ResponseEntity.ok("Hello World")
+        val result = (1..1000).sumOf { it * it }
+
+        Thread.sleep(40)
+
+        return ResponseEntity.ok("Result: $result")
     }
 */

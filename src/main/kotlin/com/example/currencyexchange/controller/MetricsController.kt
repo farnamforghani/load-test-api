@@ -3,24 +3,22 @@ package com.example.currencyexchange.controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.util.concurrent.atomic.AtomicInteger
+import java.lang.management.ManagementFactory
 
 @RestController
-@RequestMapping("/api/metrics")
+@RequestMapping("/metrics")
 class MetricsController {
 
-    private val requestCounts = mutableMapOf<String, AtomicInteger>()
-    private val responseTimes = mutableMapOf<String, MutableList<Long>>()
+    @GetMapping
+    fun getMetrics(): Map<String, Any> {
+        val runtime = Runtime.getRuntime()
+        val threadMXBean = ManagementFactory.getThreadMXBean()
 
-    @GetMapping("/stats")
-    fun getStats(): Map<String, Any> {
         return mapOf(
-            "requestCounts" to requestCounts.mapValues { it.value.get() },
-            "averageResponseTimes" to responseTimes.mapValues { entry ->
-                entry.value.average()
-            },
-            "activeThreads" to Thread.activeCount(),
-            "availableProcessors" to Runtime.getRuntime().availableProcessors()
+            "activeThreads" to threadMXBean.threadCount,
+            "totalMemory" to runtime.totalMemory(),
+            "freeMemory" to runtime.freeMemory(),
+            "maxMemory" to runtime.maxMemory()
         )
     }
 }

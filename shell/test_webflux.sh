@@ -13,5 +13,5 @@ echo "==============================================="
 #wrk -t8 -c100 -d30s --timeout 10s "http://localhost:8080/api/webflux"
 
 
-echo "Heavy load (200 connections, 20 seconds):"
-wrk -t12 -c200 -d40s --timeout 10s "http://localhost:8080/api/webflux"
+#echo "Heavy load (200 connections, 20 seconds):"
+wrk -t10 -c100 -d30s "http://localhost:8080/api/webflux"

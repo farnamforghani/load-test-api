@@ -6,8 +6,8 @@ echo "Testing BLOCKING approach with RestTemplate"
 echo "==============================================="
 
 # Light load test
-echo "Light load (200 connections, 20 seconds):"
-wrk -t12 -c200 -d40s --timeout 10s "http://localhost:8080/api/blocking/rest"
+#echo "Light load (200 connections, 20 seconds):"
+wrk -t10 -c100 -d30s "http://localhost:8080/api/blocking/rest"
 
 #
 #echo ""
